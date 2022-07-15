@@ -1,0 +1,24 @@
+<div class="content">
+<p><%= sanitizing_text(@memo_info[:name]) %></p>
+<p>
+  <% @memo_info[:content].split.each do |n| %>
+    <%= sanitizing_text(n) %></br>
+  <% end %>
+</p></div>
+
+<table>
+<tr>
+  <td><form action="/<%= @memo_info[:id] %>/edit" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    <button type="submit" class="bottun">変更</button>
+  </form></td>
+  <td><form action="/<%= @memo_info[:id] %>/delete" method="post">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" class="bottun">削除</button>
+  </form></td>
+</tr>
+</table>
+
+<a href="/">
+  <button type="button">TOPへ</button>
+</a>

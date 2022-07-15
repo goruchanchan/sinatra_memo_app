@@ -1,0 +1,10 @@
+<form action="/new" method="get">
+  <button type="submit" class="bottun">追加</button>
+</form>
+
+<div class="memo">
+  <ul><% parse_memo_directories.sort.each do |name| %>
+      <% memo_info = parse_memo_detail(name) %>
+      <li><a href="/show/<%= memo_info[:id] %>"><%= memo_info[:name] %></a></li>
+  <% end %></ul>
+</div>
