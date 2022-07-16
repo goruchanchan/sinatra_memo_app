@@ -3,17 +3,41 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
+require 'pg'
+
+class Memos
+  attr_reader :memo_id
+  attr_accessor :title, :content
+
+  def initialize(title, content)
+    @title = title
+    @content = content
+  end
+end
+
+
+# Output a table of current connections to the DB
+# conn.exec("BEGIN TRANSACTION;
+#   INSERT INTO memos VALUES ('', 'Tシャツ','衣服');
+#   COMMIT;")
+# conn.exec("SELECT * FROM memos") do |result|
+#   result.each do |row|
+#     p " %d | %s | %s " %
+#       row.values_at('memo_id', 'title', 'content')
+#   end
+# end
+def select_memos_all
+  conn = PG.connect(dbname: 'memoDB')
+  result = conn.exec("SELECT * FROM memos")
+  p result
+end
 
 def load_memo_path
   './public/memos/'
 end
 
-def parse_memo_detail(id)
-  f = File.new("#{load_memo_path}#{id}/name.txt")
-  name = f.gets
-  f = File.new("#{load_memo_path}#{id}/content.txt")
-  content = f.read
-  { id: id, name: name, content: content }
+def parse_memo_detail(memo)
+  { id: memo[id], name: memo[:title], content: memo[:content] }
 end
 
 def parse_memo_directories
