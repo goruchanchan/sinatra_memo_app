@@ -25,6 +25,10 @@ li::before {
   background: rgb(6, 7, 7);
 }
 
+.form-items{
+  margin-left: 20px;
+}
+
 .form-items__item input[type='text'],textarea{
   display: inline-block;
   font-size:1.5em;
