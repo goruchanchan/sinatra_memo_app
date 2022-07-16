@@ -11,7 +11,7 @@ def parse_memo_detail(id)
   f = File.new("#{load_memo_path}#{id}/name.txt")
   name = f.gets
   f = File.new("#{load_memo_path}#{id}/content.txt")
-  content = f.gets
+  content = f.read
   { id: id, name: name, content: content }
 end
 
