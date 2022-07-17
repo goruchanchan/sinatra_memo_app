@@ -35,15 +35,10 @@ def parse_memo_directories
   Dir.open(load_memo_path.to_s).children.reject { |dir_name| dir_name.include? 'del' }
 end
 
-def create_memo_directory
-  id = Dir.open(load_memo_path.to_s).children.size + 1
-  Dir.mkdir("#{load_memo_path}#{id}", 0o0777)
-  id
-end
-
-def write_memo(id, name, content)
-  IO.write("#{load_memo_path}#{id}/name.txt", name.to_s)
-  IO.write("#{load_memo_path}#{id}/content.txt", content.to_s)
+def write_memo(name, content)
+  database = String('memoDB')
+  conn = PG::Connection.new(:dbname => database)
+  conn.exec("INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id",[name,content]).first
 end
 
 def sanitizing_text(text)
@@ -65,8 +60,7 @@ get '/new' do
 end
 
 post '/new' do
-  id = create_memo_directory
-  write_memo(id, params['name'], params['content'])
+  id = write_memo(params['name'], params['content'])['memo_id']
   redirect to("/show/#{id}")
 end
 
