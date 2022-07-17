@@ -5,34 +5,16 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'pg'
 
-class Memos
-  attr_reader :memo_id
-  attr_accessor :title, :content
-
-  def initialize(title, content)
-    @title = title
-    @content = content
-  end
-end
-
 def select_memos_all
   database = String('memoDB')
   conn = PG::Connection.new(:dbname => database)
   result = conn.exec("SELECT * FROM memos")
 end
 
-def load_memo_path
-  './public/memos/'
-end
-
 def parse_memo_detail(id)
   database = String('memoDB')
   conn = PG::Connection.new(:dbname => database)
   conn.exec("SELECT * FROM memos WHERE memo_id = #{id}").first
-end
-
-def parse_memo_directories
-  Dir.open(load_memo_path.to_s).children.reject { |dir_name| dir_name.include? 'del' }
 end
 
 def write_memo(name, content)
