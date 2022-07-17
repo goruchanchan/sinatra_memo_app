@@ -1,9 +1,12 @@
+<% memo_info = parse_memo_detail(@params[:id]) %>
+<% delete_memo(@params[:id]) %>
+
 次のメモを削除しました
 
 <div class="content">
-<p><%= sanitizing_text(@memo_info[:name]) %></p>
+<p><%= sanitizing_text(memo_info['title']) %></p>
 <p>
-  <% @memo_info[:content].split.each do |n| %>
+  <% memo_info['content'].split.each do |n| %>
     <%= sanitizing_text(n) %></br>
   <% end %>
 </p></div>

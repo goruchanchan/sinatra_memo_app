@@ -52,7 +52,9 @@ def sanitizing_text(text)
 end
 
 def delete_memo(id)
-  File.rename("#{load_memo_path}#{id}", "#{load_memo_path}#{id}.del")
+  database = String('memoDB')
+  conn = PG::Connection.new(:dbname => database)
+  conn.exec("DELETE FROM memos WHERE memo_id = $1",[id]).first
 end
 
 get '/' do
@@ -87,7 +89,5 @@ end
 
 delete '/:id/delete' do
   @title = 'delete'
-  @memo_info = parse_memo_detail(params['id'])
-  delete_memo(params['id'])
   erb :delete
 end
