@@ -35,10 +35,11 @@ def parse_memo_directories
   Dir.open(load_memo_path.to_s).children.reject { |dir_name| dir_name.include? 'del' }
 end
 
-def write_memo(name, content)
+def write_memo(id = nil, name, content)
   database = String('memoDB')
   conn = PG::Connection.new(:dbname => database)
-  conn.exec("INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id",[name,content]).first
+  sql = id.nil? ? "INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id" :   "UPDATE memos SET (title, content) = ($1, $2) WHERE memo_id = $3 RETURNING memo_id"
+  conn.exec(sql,[name,content,id]).first
 end
 
 def sanitizing_text(text)
@@ -65,7 +66,7 @@ post '/new' do
 end
 
 put '/new/:id' do
-  write_memo(params['id'], params['name'], params['content'])
+  id = write_memo(params['id'], params['name'], params['content'])['memo_id']
   redirect to("/show/#{params['id']}")
 end
 
@@ -76,7 +77,6 @@ end
 
 put '/:id/edit' do
   @title = 'edit'
-  @memo_info = parse_memo_detail(params['id'])
   erb :edit
 end
 
