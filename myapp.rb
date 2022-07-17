@@ -15,29 +15,20 @@ class Memos
   end
 end
 
-
-# Output a table of current connections to the DB
-# conn.exec("BEGIN TRANSACTION;
-#   INSERT INTO memos VALUES ('', 'Tシャツ','衣服');
-#   COMMIT;")
-# conn.exec("SELECT * FROM memos") do |result|
-#   result.each do |row|
-#     p " %d | %s | %s " %
-#       row.values_at('memo_id', 'title', 'content')
-#   end
-# end
 def select_memos_all
-  conn = PG.connect(dbname: 'memoDB')
+  database = String('memoDB')
+  conn = PG::Connection.new(:dbname => database)
   result = conn.exec("SELECT * FROM memos")
-  p result
 end
 
 def load_memo_path
   './public/memos/'
 end
 
-def parse_memo_detail(memo)
-  { id: memo[id], name: memo[:title], content: memo[:content] }
+def parse_memo_detail(id)
+  database = String('memoDB')
+  conn = PG::Connection.new(:dbname => database)
+  memo_info = conn.exec("SELECT * FROM memos WHERE memo_id = #{id}").first
 end
 
 def parse_memo_directories
@@ -86,7 +77,6 @@ end
 
 get '/show/:id' do
   @title = 'show content'
-  @memo_info = parse_memo_detail(params['id'])
   erb :show
 end
 
