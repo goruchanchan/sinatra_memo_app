@@ -28,7 +28,7 @@ end
 def parse_memo_detail(id)
   database = String('memoDB')
   conn = PG::Connection.new(:dbname => database)
-  memo_info = conn.exec("SELECT * FROM memos WHERE memo_id = #{id}").first
+  conn.exec("SELECT * FROM memos WHERE memo_id = #{id}").first
 end
 
 def parse_memo_directories
