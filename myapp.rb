@@ -35,11 +35,16 @@ def parse_memo_directories
   Dir.open(load_memo_path.to_s).children.reject { |dir_name| dir_name.include? 'del' }
 end
 
-def write_memo(id = nil, name, content)
+def write_memo(name, content)
   database = String('memoDB')
   conn = PG::Connection.new(:dbname => database)
-  sql = id.nil? ? "INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id" :   "UPDATE memos SET (title, content) = ($1, $2) WHERE memo_id = $3 RETURNING memo_id"
-  conn.exec(sql,[name,content,id]).first
+  conn.exec("INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id",[name,content]).first
+end
+
+def update_memo(id, name, content)
+  database = String('memoDB')
+  conn = PG::Connection.new(:dbname => database)
+  conn.exec("UPDATE memos SET (title, content) = ($1, $2) WHERE memo_id = $3 RETURNING memo_id",[name,content,id]).first
 end
 
 def sanitizing_text(text)
@@ -66,7 +71,7 @@ post '/new' do
 end
 
 put '/new/:id' do
-  id = write_memo(params['id'], params['name'], params['content'])['memo_id']
+  id = update_memo(params['id'], params['name'], params['content'])['memo_id']
   redirect to("/show/#{params['id']}")
 end
 
