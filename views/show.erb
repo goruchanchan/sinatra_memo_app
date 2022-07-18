@@ -1,4 +1,4 @@
-<% memo_info = parse_memo_detail(@params[:id]) %>
+<% memo_info = DBconection.run_sql(parse_sql(id: @params[:id], type: 'detail')).first %>
 
 <div class="content">
 <p><%= sanitizing_text(memo_info['title']) %></p>

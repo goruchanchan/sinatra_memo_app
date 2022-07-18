@@ -13,20 +13,19 @@ class DBconection
   end
 end
 
-def parse_memo_detail(id)
-  DBconection.run_sql("SELECT * FROM memos WHERE memo_id = #{id}").first
-end
-
-def write_memo(name, content)
-  DBconection.run_sql("INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id",[name,content]).first
-end
-
-def update_memo(id, name, content)
-  DBconection.run_sql("UPDATE memos SET (title, content) = ($1, $2) WHERE memo_id = $3 RETURNING memo_id",[name,content,id]).first
-end
-
-def delete_memo(id)
-  DBconection.run_sql("DELETE FROM memos WHERE memo_id = $1",[id]).first
+def parse_sql(id: nil, name: nil, content: nil, type:nil)
+  case type
+  when 'all'
+    return "SELECT * FROM memos"
+  when 'detail'
+    return "SELECT * FROM memos WHERE memo_id = #{id}"
+  when 'write'
+    return "INSERT INTO memos(title, content) VALUES ('#{name}','#{content}') RETURNING memo_id"
+  when 'update'
+    return "UPDATE memos SET (title, content) = ('#{name}','#{content}') WHERE memo_id = #{id} RETURNING memo_id"
+  else
+    return "DELETE FROM memos WHERE memo_id = #{id}"
+  end
 end
 
 def sanitizing_text(text)
@@ -44,12 +43,12 @@ get '/new' do
 end
 
 post '/new' do
-  id = write_memo(params['name'], params['content'])['memo_id']
+  id = DBconection.run_sql(parse_sql(name: params['name'], content: params['content'], type: 'write')).first['memo_id']
   redirect to("/show/#{id}")
 end
 
 put '/new/:id' do
-  id = update_memo(params['id'], params['name'], params['content'])['memo_id']
+  id = DBconection.run_sql(parse_sql(id: params['id'], name: params['name'], content: params['content'], type: 'update')).first['memo_id']
   redirect to("/show/#{params['id']}")
 end
 
