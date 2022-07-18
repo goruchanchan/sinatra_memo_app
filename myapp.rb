@@ -5,38 +5,32 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'pg'
 
-def select_memos_all
-  database = String('memoDB')
-  conn = PG::Connection.new(:dbname => database)
-  result = conn.exec("SELECT * FROM memos")
+class DBconection
+  @@conn = PG::Connection.new(:dbname => 'memoDB')
+
+  def self.run_sql(sentences, options = nil)
+    @@conn.exec(sentences,options)
+  end
 end
 
 def parse_memo_detail(id)
-  database = String('memoDB')
-  conn = PG::Connection.new(:dbname => database)
-  conn.exec("SELECT * FROM memos WHERE memo_id = #{id}").first
+  DBconection.run_sql("SELECT * FROM memos WHERE memo_id = #{id}").first
 end
 
 def write_memo(name, content)
-  database = String('memoDB')
-  conn = PG::Connection.new(:dbname => database)
-  conn.exec("INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id",[name,content]).first
+  DBconection.run_sql("INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id",[name,content]).first
 end
 
 def update_memo(id, name, content)
-  database = String('memoDB')
-  conn = PG::Connection.new(:dbname => database)
-  conn.exec("UPDATE memos SET (title, content) = ($1, $2) WHERE memo_id = $3 RETURNING memo_id",[name,content,id]).first
+  DBconection.run_sql("UPDATE memos SET (title, content) = ($1, $2) WHERE memo_id = $3 RETURNING memo_id",[name,content,id]).first
+end
+
+def delete_memo(id)
+  DBconection.run_sql("DELETE FROM memos WHERE memo_id = $1",[id]).first
 end
 
 def sanitizing_text(text)
   text.gsub(/&|<|>|"|'/, '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "\'" => '&#39;')
-end
-
-def delete_memo(id)
-  database = String('memoDB')
-  conn = PG::Connection.new(:dbname => database)
-  conn.exec("DELETE FROM memos WHERE memo_id = $1",[id]).first
 end
 
 get '/' do

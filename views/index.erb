@@ -2,7 +2,7 @@
   <button type="submit" class="bottun">追加</button>
 </form>
 
-<ul><% select_memos_all.each do |memo| %>
+<ul><% DBconection.run_sql("SELECT * FROM memos").each do |memo| %>
     <li><a href="/show/<%= memo['memo_id'] %>"><%= memo['title'] %></a></li>
 <% end %></ul>
 
