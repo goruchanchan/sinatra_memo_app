@@ -4,7 +4,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 
 def load_memo_path
-  './public/memos/'
+  './db/'
 end
 
 def parse_memo_detail(id)
