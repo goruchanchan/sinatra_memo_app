@@ -8,4 +8,5 @@ gem 'webrick'
 
 group :development do
   gem 'rubocop-fjord', require: false
+  gem 'erb_lint', require: false
 end

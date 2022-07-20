@@ -2,7 +2,7 @@
 <p><%= sanitizing_text(@memo_info[:name]) %></p>
 <p>
   <% @memo_info[:content].split.each do |n| %>
-    <%= sanitizing_text(n) %></br>
+    <%= sanitizing_text(n) %><br>
   <% end %>
 </p></div>
 
