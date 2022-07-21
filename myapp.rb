@@ -36,20 +36,20 @@ get '/' do
   erb :index
 end
 
-get '/new' do
+get '/memos' do
   @title = 'new content'
   erb :new
 end
 
-post '/new' do
+post '/memos' do
   id = Dir.open(load_memo_path).children.size + 1
   write_memo(id, params['name'], params['content'])
-  redirect to("/show/#{id}")
+  redirect to("/memos/#{id}")
 end
 
-put '/new/:id' do
+put '/memos/:id' do
   write_memo(params['id'], params['name'], params['content'])
-  redirect to("/show/#{params['id']}")
+  redirect to("/memos/#{params['id']}")
 end
 
 get '/memos/:id' do
@@ -58,13 +58,13 @@ get '/memos/:id' do
   erb :show
 end
 
-put '/:id/edit' do
+get '/memos/:id/edit' do
   @title = 'edit'
   @memo_info = parse_memo_detail("#{params['id']}.json")
   erb :edit
 end
 
-delete '/:id/delete' do
+delete '/memos/:id' do
   @title = 'delete'
   @memo_info = parse_memo_detail("#{params['id']}.json")
   delete_memo("#{params['id']}.json")
