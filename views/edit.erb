@@ -1,6 +1,6 @@
 <% memo_info = DBconection.run_sql(parse_sql(id: @params[:id], type: 'detail')).first %>
 
-<form action="/new/<%= memo_info['memo_id'] %>" method="post">
+<form action="/memos/<%= memo_info['memo_id'] %>" method="post">
   <div class="form-items">
     <div class="form-items__item">
       <input type="text" name="name" value="<%= sanitizing_text(memo_info['title']) %>">

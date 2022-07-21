@@ -1,7 +1,7 @@
-<form action="/new" method="get">
+<a href="/memos">
   <button type="submit" class="bottun">追加</button>
-</form>
+</a>
 
 <ul><% DBconection.run_sql(parse_sql(type: 'all')).each do |memo| %>
-    <li><a href="/show/<%= memo['memo_id'] %>"><%= memo['title'] %></li>
+    <li><a href="/memos/<%= memo['memo_id'] %>"><%= memo['title'] %></li>
 <% end %></ul>

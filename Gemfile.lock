@@ -106,6 +106,7 @@ PLATFORMS
 DEPENDENCIES
   erb_lint
   pg
+  rack
   rubocop-fjord
   sinatra
   sinatra-contrib

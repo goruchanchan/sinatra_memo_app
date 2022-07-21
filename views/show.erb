@@ -10,11 +10,10 @@
 
 <table>
 <tr>
-  <td><form action="/<%= memo_info['memo_id'] %>/edit" method="post">
-    <input type="hidden" name="_method" value="PUT">
+  <td><a href="/memos/<%= memo_info['memo_id'] %>/edit">
     <button type="submit" class="bottun">変更</button>
-  </form></td>
-  <td><form action="/<%= memo_info['memo_id'] %>/delete" method="post">
+  </a></td>
+  <td><form action="/memos/<%= memo_info['memo_id'] %>" method="post">
     <input type="hidden" name="_method" value="DELETE">
     <button type="submit" class="bottun">削除</button>
   </form></td>

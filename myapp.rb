@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+
+require 'pg'
+require 'rack'
 require 'sinatra'
 require 'sinatra/reloader'
-require 'pg'
 
 class DBconection
   @@conn = PG::Connection.new(:dbname => 'memoDB')
@@ -29,7 +31,7 @@ def parse_sql(id: nil, name: nil, content: nil, type:nil)
 end
 
 def sanitizing_text(text)
-  text.gsub(/&|<|>|"|'/, '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "\'" => '&#39;')
+  Rack::Utils.escape_html(text)
 end
 
 get '/' do
@@ -37,32 +39,32 @@ get '/' do
   erb :index
 end
 
-get '/new' do
+get '/memos' do
   @title = 'new content'
   erb :new
 end
 
-post '/new' do
+post '/memos' do
   id = DBconection.run_sql(parse_sql(name: params['name'], content: params['content'], type: 'write')).first['memo_id']
-  redirect to("/show/#{id}")
+  redirect to("/memos/#{id}")
 end
 
-put '/new/:id' do
+put '/memos/:id' do
   id = DBconection.run_sql(parse_sql(id: params['id'], name: params['name'], content: params['content'], type: 'update')).first['memo_id']
-  redirect to("/show/#{params['id']}")
+  redirect to("/memos/#{params['id']}")
 end
 
-get '/show/:id' do
+get '/memos/:id' do
   @title = 'show content'
   erb :show
 end
 
-put '/:id/edit' do
+get '/memos/:id/edit' do
   @title = 'edit'
   erb :edit
 end
 
-delete '/:id/delete' do
+delete '/memos/:id' do
   @title = 'delete'
   erb :delete
 end
