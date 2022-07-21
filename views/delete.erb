@@ -1,5 +1,5 @@
-<% memo_info = DBconection.run_sql(parse_sql(id: @params[:id], type: 'detail')).first %>
-<% DBconection.run_sql(parse_sql(id: @params[:id], type: 'delete')) %>
+<% memo_info = DBconection.run_sql(parse_sql(:detail), [@params['id']]).first %>
+<% DBconection.run_sql(parse_sql(:delete), [@params['id']]) %>
 
 次のメモを削除しました
 

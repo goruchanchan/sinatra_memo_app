@@ -2,6 +2,6 @@
   <button type="submit" class="bottun">追加</button>
 </a>
 
-<ul><% DBconection.run_sql(parse_sql(type: 'all')).each do |memo| %>
+<ul><% DBconection.run_sql(parse_sql(:all)).each do |memo| %>
     <li><a href="/memos/<%= memo['memo_id'] %>"><%= memo['title'] %></li>
 <% end %></ul>

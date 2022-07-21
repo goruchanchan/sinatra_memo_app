@@ -15,19 +15,14 @@ class DBconection
   end
 end
 
-def parse_sql(id: nil, name: nil, content: nil, type:nil)
-  case type
-  when 'all'
-    return "SELECT * FROM memos"
-  when 'detail'
-    return "SELECT * FROM memos WHERE memo_id = #{id}"
-  when 'write'
-    return "INSERT INTO memos(title, content) VALUES ('#{name}','#{content}') RETURNING memo_id"
-  when 'update'
-    return "UPDATE memos SET (title, content) = ('#{name}','#{content}') WHERE memo_id = #{id} RETURNING memo_id"
-  else
-    return "DELETE FROM memos WHERE memo_id = #{id}"
-  end
+def parse_sql(type)
+  {
+    all: "SELECT * FROM memos",
+    detail: "SELECT * FROM memos WHERE memo_id = $1",
+    write: "INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id",
+    update: "UPDATE memos SET (title, content) = ($1,$2) WHERE memo_id = $3 RETURNING memo_id",
+    delete: "DELETE FROM memos WHERE memo_id = $1"
+  }[type]
 end
 
 def sanitizing_text(text)
@@ -45,12 +40,12 @@ get '/memos' do
 end
 
 post '/memos' do
-  id = DBconection.run_sql(parse_sql(name: params['name'], content: params['content'], type: 'write')).first['memo_id']
+  id = DBconection.run_sql(parse_sql(:write), [params['name'], params['content']]).first['memo_id']
   redirect to("/memos/#{id}")
 end
 
 put '/memos/:id' do
-  id = DBconection.run_sql(parse_sql(id: params['id'], name: params['name'], content: params['content'], type: 'update')).first['memo_id']
+  id = DBconection.run_sql(parse_sql(:update), [params['name'], params['content'], @params[:id]]).first['memo_id']
   redirect to("/memos/#{params['id']}")
 end
 
