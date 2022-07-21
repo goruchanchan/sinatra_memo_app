@@ -52,7 +52,7 @@ put '/new/:id' do
   redirect to("/show/#{params['id']}")
 end
 
-get '/show/:id' do
+get '/memos/:id' do
   @title = 'show content'
   @memo_info = parse_memo_detail("#{params['id']}.json")
   erb :show

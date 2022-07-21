@@ -5,6 +5,6 @@
 <div class="memo">
   <ul><% parse_memo_files.sort.each do |name| %>
       <% memo_info = parse_memo_detail(name) %>
-      <li><a href="/show/<%= memo_info[:id] %>"><%= memo_info[:name] %></a></li>
+      <li><a href="/memos/<%= memo_info[:id] %>"><%= memo_info[:name] %></a></li>
   <% end %></ul>
 </div>
