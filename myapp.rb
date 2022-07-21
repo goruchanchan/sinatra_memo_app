@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require 'json'
+require 'rack'
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
 
 def load_memo_path
   './db/'
@@ -23,7 +24,7 @@ def write_memo(id, name, content)
 end
 
 def sanitizing_text(text)
-  text.gsub(/&|<|>|"|'/, '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "\'" => '&#39;')
+  Rack::Utils.escape_html(text)
 end
 
 def delete_memo(file_name)
