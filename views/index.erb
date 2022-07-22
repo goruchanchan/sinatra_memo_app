@@ -3,5 +3,5 @@
 </a>
 
 <ul><% DBconection.run_sql(parse_sql(:all)).each do |memo| %>
-    <li><a href="/memos/<%= memo['memo_id'] %>"><%= memo['title'] %></li>
+    <li><a href="/memos/<%= memo['memo_id'] %>"><%= sanitizing_text(memo['title']) %></li>
 <% end %></ul>
