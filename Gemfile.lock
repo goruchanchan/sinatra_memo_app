@@ -49,7 +49,10 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.0)
       ast (~> 2.4.1)
+<<<<<<< HEAD
     pg (1.4.1)
+=======
+>>>>>>> b8c2ecc414e82dec13585587c12c884afc5943d4
     racc (1.6.0)
     rack (2.2.4)
     rack-protection (2.2.0)
@@ -95,7 +98,11 @@ GEM
       tilt (~> 2.0)
     smart_properties (1.17.0)
     tilt (2.0.10)
+<<<<<<< HEAD
     tzinfo (2.0.4)
+=======
+    tzinfo (2.0.5)
+>>>>>>> b8c2ecc414e82dec13585587c12c884afc5943d4
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.2.0)
     webrick (1.7.0)
@@ -105,7 +112,10 @@ PLATFORMS
 
 DEPENDENCIES
   erb_lint
+<<<<<<< HEAD
   pg
+=======
+>>>>>>> b8c2ecc414e82dec13585587c12c884afc5943d4
   rack
   rubocop-fjord
   sinatra

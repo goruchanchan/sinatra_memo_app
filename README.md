@@ -22,14 +22,14 @@ bundle exec ruby myapp.rb
 
 * トップ画面（ http://localhost:4567/ ）
   ![image.png](https://www.evernote.com/l/AZCJujylOFFA152sXWpwHk2E8w_XqkNVZoUB/image.png)
-* メモ登録画面（ http://localhost:4567/new ）
+* メモ登録画面（ http://localhost:4567/memos ）
   ![image.png](https://www.evernote.com/l/AZDDax7y3p1KdZkHX2krEtCc3r8uRAgTlH8B/image.png)
 
   メモタイトル、メモ内容は必ず入力してください。空コンテンツがあるとトップ画面がエラー状態になります。空コンテンツ対策していません😅
 
-* メモ詳細表示画面（ http://localhost:4567/show ）
+* メモ詳細表示画面（ http://localhost:4567/memos/{memo_id} ）
   ![!image.png](https://www.evernote.com/l/AZCFo73bSaZNW6ct51BsbrDdCwe_pztfKo4B/image.png)
-* メモ編集画面（ http://localhost:4567/edit ）
+* メモ編集画面（ http://localhost:4567/memos/{memo_id}/edit ）
   ![image.png](https://www.evernote.com/l/AZDCo4CeACZB4ZpwZl1_etZCkg7BplpRxDUB/image.png)
 
 ## 動作確認環境
@@ -44,13 +44,12 @@ Bunler|2.3.5
 
 メモアプリは、Bundlerを使ってgemの依存関係を管理しています。事前にBundlerが使えるようにしておいてください。
 
-
 ``` bash
 git clone https://github.com/goruchanchan/sinatra_memo_app.git
 
 cd sinatra_memo_app
 # コンテンツ格納用ディレクトリを作成します
-mkdir public/memos
+mkdir db
 
 bundle install
 bundle exec ruby myapp.rb
