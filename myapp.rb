@@ -7,7 +7,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 
 class DBconection
-  @@conn = PG::Connection.new(:dbname => 'memoDB', :user => 'goruchan', :password => 'hogehoge',)
+  @@conn = PG::Connection.new(:dbname => 'memoDB', :user => 'hoge', :password => 'hogehoge',)
 
   def self.run_sql(sentences, options = nil)
     @@conn.exec(sentences,options)
