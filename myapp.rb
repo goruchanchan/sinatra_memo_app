@@ -1,14 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-
 require 'pg'
 require 'rack'
 require 'sinatra'
 require 'sinatra/reloader'
 
 class DBconection
-  @@conn = PG::Connection.new(:dbname => 'memoDB')
+  @@conn = PG::Connection.new(:dbname => 'memoDB', :user => 'goruchan', :password => 'hogehoge',)
 
   def self.run_sql(sentences, options = nil)
     @@conn.exec(sentences,options)
