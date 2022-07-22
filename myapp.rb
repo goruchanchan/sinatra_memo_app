@@ -44,7 +44,7 @@ post '/memos' do
 end
 
 put '/memos/:id' do
-  id = DBconection.run_sql(parse_sql(:update), [params['name'], params['content'], @params[:id]]).first['memo_id']
+  DBconection.run_sql(parse_sql(:update), [params['name'], params['content'], @params[:id]]).first['memo_id']
   redirect to("/memos/#{params['id']}")
 end
 
