@@ -7,20 +7,20 @@ require 'sinatra'
 require 'sinatra/reloader'
 
 class DBconection
-  @@conn = PG::Connection.new(:dbname => 'memoDB', :user => 'hoge', :password => 'hogehoge',)
+  @@conn = PG::Connection.new(dbname: 'memoDB', user: 'hoge', password: 'hogehoge')
 
   def self.run_sql(sentences, options = nil)
-    @@conn.exec(sentences,options)
+    @@conn.exec(sentences, options)
   end
 end
 
 def parse_sql(type)
   {
-    all: "SELECT * FROM memos",
-    detail: "SELECT * FROM memos WHERE memo_id = $1",
-    write: "INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id",
-    update: "UPDATE memos SET (title, content) = ($1,$2) WHERE memo_id = $3 RETURNING memo_id",
-    delete: "DELETE FROM memos WHERE memo_id = $1"
+    all: 'SELECT * FROM memos',
+    detail: 'SELECT * FROM memos WHERE memo_id = $1',
+    write: 'INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id',
+    update: 'UPDATE memos SET (title, content) = ($1,$2) WHERE memo_id = $3 RETURNING memo_id',
+    delete: 'DELETE FROM memos WHERE memo_id = $1'
   }[type]
 end
 
