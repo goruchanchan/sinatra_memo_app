@@ -90,8 +90,10 @@ memoDB=# GRANT USAGE ON SEQUENCE memos_memo_id_seq TO hoge;
 ``` bash
 # bundlerのインストール
 % gem install bundler
+# 不要なgemをインストールしないように設定
+% bundle config set --local without 'development'
 # 必要なgemのインストール
-% bundle install --without development
+% bundle install
 # メモアプリの起動
 % bundle exec ruby myapp.rb
 ```
