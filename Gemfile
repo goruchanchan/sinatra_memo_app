@@ -11,5 +11,4 @@ gem 'webrick'
 group :development do
   gem 'erb_lint', require: false
   gem 'rubocop-fjord', require: false
-  gem 'erb_lint', require: false
 end

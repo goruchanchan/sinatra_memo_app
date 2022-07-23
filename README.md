@@ -91,7 +91,7 @@ memoDB=# GRANT USAGE ON SEQUENCE memos_memo_id_seq TO hoge;
 # bundlerのインストール
 % gem install bundler
 # 必要なgemのインストール
-% bundle install
+% bundle install --without development
 # メモアプリの起動
 % bundle exec ruby myapp.rb
 ```

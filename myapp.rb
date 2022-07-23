@@ -1,10 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'pg'
-require 'rack'
-require 'sinatra'
-require 'sinatra/reloader'
+Bundler.require(:default)
 
 class DBconection
   def initialize
