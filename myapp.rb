@@ -1,72 +1,72 @@
+#!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'json'
-require 'rack'
-require 'sinatra'
-require 'sinatra/reloader'
+Bundler.require(:default)
 
-def load_memo_path
-  './db/'
+class DBconection
+  def initialize
+    @conn = PG::Connection.new(dbname: 'memoDB', user: 'hoge', password: 'hogehoge')
+  end
+
+  def run_sql(sentences, options = nil)
+    @conn.exec(sentences, options)
+  end
+
+  def self.parse_sql(type)
+    {
+      all: 'SELECT * FROM memos',
+      detail: 'SELECT * FROM memos WHERE memo_id = $1',
+      write: 'INSERT INTO memos(title, content) VALUES ($1,$2) RETURNING memo_id',
+      update: 'UPDATE memos SET (title, content) = ($1,$2) WHERE memo_id = $3 RETURNING memo_id',
+      delete: 'DELETE FROM memos WHERE memo_id = $1'
+    }[type]
+  end
+
+  def self.sanitizing_text(text)
+    Rack::Utils.escape_html(text)
+  end
 end
 
-def parse_memo_detail(file_name)
-  f = File.new("#{load_memo_path}#{file_name}")
-  hash = JSON.parse(f.gets)
-  { id: hash['id'], name: hash['name'], content: hash['content'] }
-end
-
-def parse_memo_files
-  Dir.open(load_memo_path.to_s).children.reject { |file_name| file_name.include? 'del' }
-end
-
-def write_memo(id, name, content)
-  IO.write("#{load_memo_path}#{id}.json", JSON.dump({ id: id, name: name, content: content }))
-end
-
-def sanitizing_text(text)
-  Rack::Utils.escape_html(text)
-end
-
-def delete_memo(file_name)
-  File.rename("#{load_memo_path}#{file_name}", "#{load_memo_path}#{file_name}.del")
-end
+dbcon = DBconection.new
 
 get '/' do
   @title = 'TOP'
+  @dbcon = dbcon
   erb :index
 end
 
 get '/memos' do
   @title = 'new content'
+  @dbcon = dbcon
   erb :new
 end
 
 post '/memos' do
-  id = Dir.open(load_memo_path).children.size + 1
-  write_memo(id, params['name'], params['content'])
+  id = dbcon.run_sql(DBconection.parse_sql(:write), [params['name'], params['content']]).first['memo_id']
+  @dbcon = dbcon
   redirect to("/memos/#{id}")
 end
 
 put '/memos/:id' do
-  write_memo(params['id'], params['name'], params['content'])
+  dbcon.run_sql(DBconection.parse_sql(:update), [params['name'], params['content'], @params[:id]]).first['memo_id']
+  @dbcon = dbcon
   redirect to("/memos/#{params['id']}")
 end
 
 get '/memos/:id' do
   @title = 'show content'
-  @memo_info = parse_memo_detail("#{params['id']}.json")
+  @dbcon = dbcon
   erb :show
 end
 
 get '/memos/:id/edit' do
   @title = 'edit'
-  @memo_info = parse_memo_detail("#{params['id']}.json")
+  @dbcon = dbcon
   erb :edit
 end
 
 delete '/memos/:id' do
   @title = 'delete'
-  @memo_info = parse_memo_detail("#{params['id']}.json")
-  delete_memo("#{params['id']}.json")
+  @dbcon = dbcon
   erb :delete
 end
