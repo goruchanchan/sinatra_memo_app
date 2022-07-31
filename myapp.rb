@@ -3,7 +3,7 @@
 
 Bundler.require(:default)
 
-class DBconection
+class DBConnection
   def initialize
     @conn = PG::Connection.new(dbname: 'memoDB', user: 'hoge', password: 'hogehoge')
   end
@@ -12,7 +12,7 @@ class DBconection
     @conn.exec(sentences, options)
   end
 
-  def self.parse_sql(type)
+  def self.choose_sql(type)
     {
       all: 'SELECT * FROM memos',
       detail: 'SELECT * FROM memos WHERE memo_id = $1',
@@ -21,13 +21,13 @@ class DBconection
       delete: 'DELETE FROM memos WHERE memo_id = $1'
     }[type]
   end
-
-  def self.sanitizing_text(text)
-    Rack::Utils.escape_html(text)
-  end
 end
 
-dbcon = DBconection.new
+def sanitizing_text(text)
+  Rack::Utils.escape_html(text)
+end
+
+dbcon = DBConnection.new
 
 get '/' do
   @title = 'TOP'
@@ -42,13 +42,13 @@ get '/memos' do
 end
 
 post '/memos' do
-  id = dbcon.run_sql(DBconection.parse_sql(:write), [params['name'], params['content']]).first['memo_id']
+  id = dbcon.run_sql(DBConnection.choose_sql(:write), [params['name'], params['content']]).first['memo_id']
   @dbcon = dbcon
   redirect to("/memos/#{id}")
 end
 
 put '/memos/:id' do
-  dbcon.run_sql(DBconection.parse_sql(:update), [params['name'], params['content'], @params[:id]]).first['memo_id']
+  dbcon.run_sql(DBConnection.choose_sql(:update), [params['name'], params['content'], @params[:id]]).first['memo_id']
   @dbcon = dbcon
   redirect to("/memos/#{params['id']}")
 end

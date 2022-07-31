@@ -1,10 +1,10 @@
-<% memo_info = @dbcon.run_sql(DBconection.parse_sql(:detail), [@params['id']]).first %>
+<% memo_info = @dbcon.run_sql(DBConnection.choose_sql(:detail), [@params['id']]).first %>
 
 <div class="content">
-<p><%= DBconection.sanitizing_text(memo_info['title']) %></p>
+<p><%= sanitizing_text(memo_info['title']) %></p>
 <p>
   <% memo_info['content'].split.each do |n| %>
-    <%= DBconection.sanitizing_text(n) %><br>
+    <%= sanitizing_text(n) %><br>
   <% end %>
 </p></div>
 
