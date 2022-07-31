@@ -31,42 +31,40 @@ dbcon = DBConnection.new
 
 get '/' do
   @title = 'TOP'
-  @dbcon = dbcon
+  @all_memo_info = dbcon.run_sql(DBConnection.choose_sql(:all))
   erb :index
 end
 
 get '/memos' do
   @title = 'new content'
-  @dbcon = dbcon
   erb :new
 end
 
 post '/memos' do
   id = dbcon.run_sql(DBConnection.choose_sql(:write), [params['name'], params['content']]).first['memo_id']
-  @dbcon = dbcon
   redirect to("/memos/#{id}")
 end
 
 put '/memos/:id' do
-  dbcon.run_sql(DBConnection.choose_sql(:update), [params['name'], params['content'], @params[:id]]).first['memo_id']
-  @dbcon = dbcon
-  redirect to("/memos/#{params['id']}")
+  dbcon.run_sql(DBConnection.choose_sql(:update), [params['name'], params['content'], params[:id]]).first['memo_id']
+  redirect to("/memos/#{params[:id]}")
 end
 
 get '/memos/:id' do
   @title = 'show content'
-  @dbcon = dbcon
+  @memo_info = dbcon.run_sql(DBConnection.choose_sql(:detail), [params[:id]]).first
   erb :show
 end
 
 get '/memos/:id/edit' do
   @title = 'edit'
-  @dbcon = dbcon
+  @memo_info = dbcon.run_sql(DBConnection.choose_sql(:detail), [params[:id]]).first
   erb :edit
 end
 
 delete '/memos/:id' do
   @title = 'delete'
-  @dbcon = dbcon
+  @memo_info = dbcon.run_sql(DBConnection.choose_sql(:detail), [params[:id]]).first
+  dbcon.run_sql(DBConnection.choose_sql(:delete), [params[:id]])
   erb :delete
 end
