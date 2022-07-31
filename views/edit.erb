@@ -1,8 +1,8 @@
-<form action="/memos/<%= @memo_info[:id] %>" method="post">
+<form action="/memos/<%= @memo_info['memo_id'] %>" method="post">
   <div class="form-items">
     <div class="form-items__item">
-      <input type="text" name="name" value="<%= sanitizing_text(@memo_info[:name]) %>">
-      <textarea name="content"><%= sanitizing_text(@memo_info[:content]) %></textarea>
+      <input type="text" name="name" value="<%= sanitizing_text(@memo_info['title']) %>">
+      <textarea name="content"><%= sanitizing_text(@memo_info['content']) %></textarea>
     </div>
     <div class="form-action">
       <input type="hidden" name="_method" value="PUT">

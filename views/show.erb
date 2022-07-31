@@ -1,17 +1,17 @@
 <div class="content">
-<p><%= sanitizing_text(@memo_info[:name]) %></p>
+<p><%= sanitizing_text(@memo_info['title']) %></p>
 <p>
-  <% @memo_info[:content].split.each do |n| %>
+  <% @memo_info['content'].split.each do |n| %>
     <%= sanitizing_text(n) %><br>
   <% end %>
 </p></div>
 
 <table>
 <tr>
-  <td><a href="/memos/<%= @memo_info[:id] %>/edit">
+  <td><a href="/memos/<%= @memo_info['memo_id'] %>/edit">
     <button type="submit" class="bottun">変更</button>
   </a></td>
-  <td><form action="/memos/<%= @memo_info[:id] %>" method="post">
+  <td><form action="/memos/<%= @memo_info['memo_id'] %>" method="post">
     <input type="hidden" name="_method" value="DELETE">
     <button type="submit" class="bottun">削除</button>
   </form></td>
